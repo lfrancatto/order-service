@@ -1,6 +1,7 @@
 package application
 
 import (
+	"context"
 	"order-service/internal/domain"
 	"testing"
 )
@@ -10,7 +11,7 @@ type mockRepo struct {
 	called bool
 }
 
-func (m *mockRepo) Save(order *domain.Order) error {
+func (m *mockRepo) Save(ctx context.Context, order *domain.Order) error {
 	m.called = true
 	return nil
 }
@@ -21,7 +22,7 @@ func TestCreateOrderExecute(t *testing.T) {
 
 	order := domain.NewOrder("1", "u1", 50)
 
-	err := usecase.Execute(order)
+	err := usecase.Execute(t.Context(), order)
 
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
