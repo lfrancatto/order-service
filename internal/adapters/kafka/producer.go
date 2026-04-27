@@ -2,6 +2,7 @@ package kafka
 
 import "github.com/confluentinc/confluent-kafka-go/kafka"
 
+// Producer is a Kafka adapter that implements EventPublisher
 type Producer struct {
 	producer *kafka.Producer
 }
@@ -23,10 +24,14 @@ func NewProducer(brokers string) (*Producer, error) {
 
 }
 
+// Publish sends a message to Kafka
 func (p *Producer) Publish(topic string, key string, payload []byte) error {
 	return p.producer.Produce(&kafka.Message{
-		TopicPartition: kafka.TopicPartition{Topic: &topic},
-		Key:            []byte(key),
-		Value:          payload,
+		TopicPartition: kafka.TopicPartition{
+			Topic:     &topic,
+			Partition: kafka.PartitionAny,
+		},
+		Key:   []byte(key),
+		Value: payload,
 	}, nil)
 }
