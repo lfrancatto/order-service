@@ -19,6 +19,8 @@ func NewOutboxWorker(db *sql.DB, publisher ports.EventPublisher) *OutboxWorker {
 	}
 }
 
+// Start continuously polls the outbox table and publishes events to Kafka.
+// This decouples database writes from event publishing, avoiding dual-write issues.
 func (w *OutboxWorker) Start() {
 	for {
 		rows, err := w.db.Query(`

@@ -6,6 +6,8 @@ type Producer struct {
 	producer *kafka.Producer
 }
 
+// NewProducer creates a Kafka producer with idempotence enabled.
+// This guarantees no duplicate messages in case of retries.
 func NewProducer(brokers string) (*Producer, error) {
 	p, err := kafka.NewProducer(&kafka.ConfigMap{
 		"bootstrap.servers":  brokers,

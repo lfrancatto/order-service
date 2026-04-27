@@ -23,6 +23,9 @@ func NewPostgresRepository(db *sql.DB) *PostgresRepository {
 	}
 }
 
+// Save persists the order and stores the corresponding event in the outbox table.
+// This ensures atomicity using a single database transaction.
+// If either operation fails, the transaction is rolled back.
 func (r *PostgresRepository) Save(ctx context.Context, order *domain.Order) error {
 	tx, err := r.db.Begin()
 	if err != nil {
